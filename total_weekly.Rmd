@@ -1,0 +1,120 @@
+---
+title: "Regresiones weekly"
+output:
+  html_document:
+    df_print: paged
+  pdf_document: default
+bibliography: references.bib
+---
+
+# ABRIR DATASET Y PANEL DATA
+
+```{r abrir_dataset, echo=FALSE}
+#rm(list = ls())
+require(readxl)
+require(stargazer)
+
+pdata = read_excel('total_data.xlsx')
+#str(panel)
+head(pdata)
+```
+
+# Variety
+
+#### Main Results Streams
+
+```{r}
+
+var1 = lm(variety_artist ~ local_artist_streams + stringency_index + date, data=pdata)
+
+var2 = lm(variety_language ~ local_language_streams + stringency_index + date, data=pdata)
+
+var3 = lm(variety_genre ~ local_genre_streams + stringency_index + date, data=pdata)
+
+
+stargazer(var1, var2, var3, type = 'latex')
+```
+
+#### Main Results Songs
+
+```{r}
+
+var4 = lm(variety_artist ~ local_artist_songs + stringency_index + date, data=pdata)
+
+var5 = lm(variety_language ~ local_language_songs + stringency_index + date, data=pdata)
+
+var6 = lm(variety_genre ~ local_genre_songs + stringency_index + date, data=pdata)
+
+
+stargazer(var4, var5, var6, type = 'latex')
+```
+
+#### Adding collaborations
+
+```{r}
+
+var7 = lm(variety_collab ~ local_collab_songs + stringency_index + date, data=pdata)
+
+var8 = lm(variety_collab ~ local_collab_streams + stringency_index + date, data=pdata)
+
+
+stargazer(var7, var8, type = 'latex')
+```
+
+# Balance
+
+#### Main Results Streams
+
+```{r}
+hhi1 = lm(balance_artist ~ local_artist_streams + stringency_index + date, data=pdata)  
+hhi2 = lm(balance_language ~ local_language_streams + stringency_index + date, data=pdata)  
+hhi3 = lm(balance_genre ~ local_genre_streams + stringency_index + date, data=pdata)   
+stargazer(hhi1, hhi2, hhi3, type = 'latex')
+```
+
+#### Main Results Songs
+
+```{r}
+hhi4 = lm(balance_artist ~ local_artist_songs + stringency_index + date, data=pdata)  
+hhi5 = lm(balance_language ~ local_language_songs + stringency_index + date, data=pdata)  
+hhi6 = lm(balance_genre ~ local_genre_songs + stringency_index + date, data=pdata)   
+stargazer(hhi4, hhi5, hhi6, type = 'latex')
+```
+
+#### Adding collaborations
+
+```{r}
+hhi7 = lm(balance_collab ~ local_collab_songs + stringency_index + date, data=pdata)  
+hhi8 = lm(balance_collab ~ local_collab_streams + stringency_index + date, data=pdata)  
+stargazer(hhi7, hhi8, type = 'latex')
+```
+
+# Disparity
+
+#### Main Results Streams
+
+```{r}
+dis1 = lm(disparity_artist ~ local_artist_streams + stringency_index + date, data=pdata)   
+
+dis2 = lm(disparity_language ~ local_language_streams + stringency_index + date, data=pdata)
+
+dis3 = lm(disparity_genre ~ local_genre_streams + stringency_index + date, data=pdata)    
+stargazer(dis1, dis2, dis3, type = 'latex')
+```
+
+#### Main Results Songs
+
+```{r}
+dis4 = lm(disparity_artist ~ local_artist_songs + stringency_index + date, data=pdata)   
+dis5 = lm(disparity_language ~ local_language_songs + stringency_index + date, data=pdata)   
+dis6 = lm(disparity_genre ~ local_genre_songs + stringency_index + date, data=pdata)    
+stargazer(dis4, dis5, dis6, type = 'latex')
+```
+
+#### Adding collaborations
+
+```{r}
+dis7 = lm(disparity_collab ~ local_collab_songs + stringency_index + date, data=pdata)   
+dis8 = lm(disparity_collab ~ local_collab_streams + stringency_index + date, data=pdata)   
+stargazer(dis7, dis8, type = 'latex')
+```

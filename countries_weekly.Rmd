@@ -1,0 +1,167 @@
+---
+title: "Regresiones weekly"
+output:
+  html_document:
+    df_print: paged
+  pdf_document: default
+bibliography: references.bib
+---
+
+# ABRIR DATASET Y PANEL DATA
+
+```{r abrir_dataset, echo=FALSE}
+#rm(list = ls())
+require(readxl)
+panel = read_excel('countries_data.xlsx')
+#str(panel)
+head(panel)
+```
+
+```{r convertir_paneldata, include=FALSE}
+require(plm)
+pdata = pdata.frame(panel,index=c("country","date"),drop.index=FALSE,row.names = TRUE)
+head(pdata)
+```
+
+```{r explorar_estructura, echo=FALSE}
+pdim(pdata)
+```
+
+```{r identificar_variables_inalteradas, echo=FALSE}
+pvar(pdata)
+```
+
+```{r librería y cambiar a numeric la fecha, include=FALSE}
+require(stargazer)
+pdata$date = as.numeric(pdata$date)
+
+```
+
+# Local Trends
+
+#### Main Results
+
+```{r}
+loc1 = plm(local_artist_songs ~ date + stringency_index, data=pdata, model= "within", effects = 'twoways')
+
+loc2 = plm(local_artist_streams ~ date + stringency_index, data=pdata, model= "within", effects = 'twoways')
+
+loc3 = plm(local_language_songs ~ date + stringency_index, data=pdata, model= "within", effects = 'twoways')
+
+loc4 = plm(local_language_streams ~ date + stringency_index, data=pdata, model= "within", effects = 'twoways')
+
+loc5 = plm(local_genre_songs ~ date + stringency_index, data=pdata, model= "within", effects = 'twoways')
+
+loc6 = plm(local_genre_streams ~ date + stringency_index, data=pdata, model= "within", effects = 'twoways')
+
+
+
+stargazer(loc1, loc2, loc3, loc4, loc5, loc6, type = 'latex')
+```
+
+#### Adding collaborations
+
+```{r}
+
+loc7 = plm(local_collab_songs ~ date + stringency_index, data=pdata, model= "within", effects = 'twoways')
+
+loc8 = plm(local_collab_streams ~ date + stringency_index, data=pdata, model= "within", effects = 'twoways')
+
+
+stargazer(loc7, loc8, type = 'latex')
+```
+
+# Variety
+
+#### Main Results Streams
+
+```{r}
+
+var1 = plm(variety_artist ~ local_artist_streams + stringency_index, data=pdata, model='within', effects='twoways')
+var2 = plm(variety_language ~ local_language_streams + stringency_index, data=pdata, model='within', effects='twoways')
+var3 = plm(variety_genre ~ local_genre_streams + stringency_index, data=pdata, model='within', effects='twoways')
+
+
+stargazer(var1, var2, var3, type = 'latex')
+```
+
+#### Main Results Songs
+
+```{r}
+
+var4 = plm(variety_artist ~ local_artist_songs + stringency_index, data=pdata, model='within', effects='twoways')
+var5 = plm(variety_language ~ local_language_songs + stringency_index, data=pdata, model='within', effects='twoways')
+var6 = plm(variety_genre ~ local_genre_songs + stringency_index, data=pdata, model='within', effects='twoways')
+
+
+stargazer(var4, var5, var6, type = 'latex')
+```
+
+#### Adding collaborations
+
+```{r}
+vs7 = plm(variety_collab ~ local_collab_songs + stringency_index, data=pdata, model='within', effects='twoways')
+vs8 = plm(variety_collab ~ local_collab_streams + stringency_index, data=pdata, model='within', effects='twoways')
+
+stargazer(vs7, vs8, type = 'latex')
+```
+
+# Balance
+
+## HHI
+
+#### Main Results Streams
+
+```{r}
+hhi1 = plm(balance_artist ~ local_artist_streams + stringency_index, data=pdata, model='within', effects='twoways') 
+hhi2 = plm(balance_language ~ local_language_streams + stringency_index, data=pdata, model='within', effects='twoways') 
+hhi3 = plm(balance_genre ~ local_genre_streams + stringency_index, data=pdata, model='within', effects='twoways')   
+stargazer(hhi1, hhi2, hhi3, type = 'latex')
+```
+
+#### Main Results Songs
+
+```{r}
+hhi4 = plm(balance_artist ~ local_artist_songs + stringency_index, data=pdata, model='within', effects='twoways') 
+hhi5 = plm(balance_language ~ local_language_songs + stringency_index, data=pdata, model='within', effects='twoways') 
+hhi6 = plm(balance_genre ~ local_genre_songs + stringency_index, data=pdata, model='within', effects='twoways')   
+stargazer(hhi4, hhi5, hhi6, type = 'latex')
+```
+
+#### Adding collaborations
+
+```{r}
+hhi7 = plm(balance_collab ~ local_collab_songs + stringency_index, data=pdata, model='within', effects='twoways') 
+hhi8 = plm(balance_collab ~ local_collab_streams + stringency_index, data=pdata, model='within', effects='twoways') 
+  
+stargazer(hhi7, hhi8, type = 'latex')
+```
+
+# Disparity
+
+#### Main Results Streams
+
+```{r}
+dis1 = plm(disparity_artist ~ local_artist_streams + stringency_index, data=pdata, model='within', effects='twoways')  
+dis2 = plm(disparity_language ~ local_language_streams + stringency_index, data=pdata, model='within', effects='twoways')  
+dis3 = plm(disparity_genre ~ local_genre_streams + stringency_index, data=pdata, model='within', effects='twoways')    
+stargazer(dis1, dis2, dis3, type = 'latex')
+```
+
+#### Main Results Songs
+
+```{r}
+dis4 = plm(disparity_artist ~ local_artist_songs + stringency_index, data=pdata, model='within', effects='twoways')  
+dis5 = plm(disparity_language ~ local_language_songs + stringency_index, data=pdata, model='within', effects='twoways')  
+dis6 = plm(disparity_genre ~ local_genre_songs + stringency_index, data=pdata, model='within', effects='twoways')    
+stargazer(dis4, dis5, dis6, type = 'latex')
+```
+
+#### Adding collaborations
+
+```{r}
+dis7 = plm(disparity_collab ~ local_collab_songs + stringency_index, data=pdata, model='within', effects='twoways')  
+dis8 = plm(disparity_collab ~ local_collab_streams + stringency_index, data=pdata, model='within', effects='twoways')  
+  
+stargazer(dis7, dis8, type = 'latex')
+```
